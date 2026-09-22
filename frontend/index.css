@@ -1999,3 +1999,372 @@ body.mobile-mode .mobile-app-wrapper {
     display: none;
   }
 }
+
+/* ============================================
+   NEW FEATURES & FIXES STYLES
+   ============================================ */
+
+/* Connection Status Pill */
+.connection-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #C8E6C9;
+  transition: all 0.2s ease;
+}
+.connection-status-pill .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4CAF50;
+  box-shadow: 0 0 6px #4CAF50;
+}
+.connection-status-pill.offline {
+  background: #FFF3E0;
+  color: #E65100;
+  border-color: #FFE0B2;
+}
+.connection-status-pill.offline .status-dot {
+  background: #FF9800;
+  box-shadow: 0 0 6px #FF9800;
+}
+
+/* Notification Badge & Dropdown */
+.sidebar-top-actions {
+  position: relative;
+}
+.icon-btn {
+  position: relative;
+}
+.notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #DC4C3E;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+  height: 16px;
+  min-width: 16px;
+  line-height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+.notif-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 12px;
+  width: 310px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeInDown 0.15s ease-out;
+}
+.notif-dropdown.open {
+  display: block;
+}
+.notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #FAFAFA;
+  border-bottom: 1px solid #EEEEEE;
+}
+.notif-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #202020;
+}
+.notif-trigger-action {
+  font-size: 11px;
+  font-weight: 600;
+  color: #DC4C3E;
+  background: #FEE8E6;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.notif-trigger-action:hover {
+  background: #FDC7C3;
+}
+.notif-list {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #F5F5F5;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.notif-item:hover {
+  background: #F9F9F9;
+}
+.notif-item-icon {
+  font-size: 16px;
+  margin-top: 1px;
+}
+.notif-item-content {
+  flex: 1;
+}
+.notif-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #202020;
+  margin-bottom: 2px;
+}
+.notif-item-desc {
+  font-size: 11px;
+  color: #666666;
+}
+.notif-empty {
+  padding: 24px 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #888888;
+}
+
+/* User Profile Dropdown */
+.sidebar-top {
+  position: relative;
+}
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 12px;
+  width: 240px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  padding: 8px 0;
+  animation: fadeInDown 0.15s ease-out;
+}
+.user-dropdown.open {
+  display: block;
+}
+.user-dropdown-info {
+  padding: 8px 14px;
+}
+.user-dropdown-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #202020;
+}
+.user-dropdown-email {
+  font-size: 12px;
+  color: #777777;
+  word-break: break-all;
+}
+.user-dropdown-divider {
+  height: 1px;
+  background: #EEEEEE;
+  margin: 6px 0;
+}
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333333;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.user-dropdown-item:hover {
+  background: #F3F3F3;
+}
+.user-dropdown-item.danger {
+  color: #DC4C3E;
+}
+.user-dropdown-item.danger:hover {
+  background: #FFF5F4;
+}
+
+/* Auth Modal */
+.auth-modal-box {
+  max-width: 380px;
+}
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+}
+.auth-tab-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: #888888;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.auth-tab-btn.active {
+  color: #DC4C3E;
+  border-bottom-color: #DC4C3E;
+}
+.auth-msg {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.auth-msg.error {
+  background: #FDE8E8;
+  color: #C5221F;
+}
+.auth-msg.success {
+  background: #E6F4EA;
+  color: #137333;
+}
+
+/* Time Input & Schedule Modal */
+.add-task-time-input {
+  padding: 4px 6px;
+  border: 1px solid #DDDDDD;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #444444;
+  outline: none;
+  background: #FFFFFF;
+}
+.add-task-time-input:focus {
+  border-color: #246FE0;
+}
+
+.sheet-time-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: #F5F7FA;
+  border: 1px solid #E1E4E8;
+  border-radius: 20px;
+}
+.sheet-time-input {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-family: inherit;
+  color: #246FE0;
+  font-weight: 600;
+  outline: none;
+}
+
+.schedule-quick-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.schedule-option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid #E0E0E0;
+  background: #FAFAFA;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333333;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.schedule-option-btn:hover,
+.schedule-option-btn.active {
+  background: #FFF5F4;
+  border-color: #DC4C3E;
+  color: #DC4C3E;
+}
+.schedule-icon {
+  font-size: 18px;
+}
+
+/* Clean Phone Frame Header */
+.phone-frame .mobile-header {
+  padding: 16px 16px 10px 16px;
+  background: #FFFFFF;
+}
+
+/* Task Item Drag & Drop ("hand task") */
+.task-item {
+  cursor: grab;
+}
+.task-item:active {
+  cursor: grabbing;
+}
+.task-item.dragging {
+  opacity: 0.4;
+  background: #F0F4F8;
+  border: 1px dashed #246FE0;
+}
+.task-item.drag-over {
+  border-top: 2px solid #246FE0;
+}
+
+/* Toast Alerts */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #202020;
+  color: #FFFFFF;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+  animation: slideInUp 0.2s ease-out;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.toast-item.hide {
+  opacity: 0;
+  transform: translateY(10px);
+}
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

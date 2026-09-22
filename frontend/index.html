@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todoist – To-Do List & Task Manager</title>
+  <meta name="description" content="Organize your work and life. Become focused, organized, and calm with Todoist. The world's #1 task manager and to-do list app.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Sidebar Top: User + Actions -->
+    <div class="sidebar-top">
+      <div class="user-profile" id="userProfile" title="Profile settings & Authentication">
+        <div class="user-avatar">
+          <img src="avatar.jpg" alt="User Avatar" class="user-avatar-img" id="userAvatarImg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <span class="user-avatar-fallback" id="userAvatarFallback">D</span>
+        </div>
+        <span class="user-name" id="userNameLabel">Denise</span>
+        <svg class="user-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="sidebar-top-actions">
+        <!-- Notification Button (Open panel button removed as requested) -->
+        <button class="icon-btn" title="Notifications" id="notifBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="notif-badge" id="notifBadge">2</span>
+        </button>
+      </div>
+
+      <!-- User Profile Auth Dropdown -->
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-dropdown-info">
+          <div class="user-dropdown-name" id="dropdownUserName">Denise</div>
+          <div class="user-dropdown-email" id="dropdownUserEmail">denise@example.com</div>
+        </div>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item" id="openAuthModalBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="authActionText">Switch / Sign In</span>
+        </button>
+        <button class="user-dropdown-item danger" id="signOutBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Sign Out
+        </button>
+      </div>
+
+      <!-- Notification Dropdown Popover -->
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">
+          <div class="notif-title">Notifications & Alarms</div>
+          <button class="notif-trigger-action" id="triggerAlertBtn" title="Test notification trigger">
+            🔔 Test Trigger
+          </button>
+        </div>
+        <div class="notif-list" id="notifList">
+          <!-- Dynamic notification items -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button class="nav-item add-task-trigger" id="sidebarAddTaskBtn" title="Add task">
+        <div class="add-task-circle">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 2v8M2 6h8" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="nav-label add-task-label">Add task</span>
+      </button>
+
+      <button class="nav-item" id="navSearch" title="Search">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M16 16l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-label">Search</span>
+      </button>
+
+      <button class="nav-item" data-view="inbox">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M22 12H16L14 15H10L8 12H2" stroke="#246FE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.45 5.11L2 12V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V12L18.55 5.11C18.21 4.43 17.52 4 16.76 4H7.24C6.48 4 5.79 4.43 5.45 5.11Z" stroke="#246FE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav-label">Inbox</span>
+        <span class="nav-count" id="inboxCount">2</span>
+      </button>
+
+      <button class="nav-item active" data-view="today">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="4" width="18" height="18" rx="2" stroke="#058527" stroke-width="1.5"/>
+          <path d="M16 2v4M8 2v4M3 10h18" stroke="#058527" stroke-width="1.5" stroke-linecap="round"/>
+          <text x="12" y="19" text-anchor="middle" font-size="8" font-weight="700" fill="#058527">22</text>
+        </svg>
+        <span class="nav-label">Today</span>
+        <span class="nav-count" id="todayCount">6</span>
+      </button>
+
+      <button class="nav-item" data-view="upcoming">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="4" width="18" height="18" rx="2" stroke="#692FC2" stroke-width="1.5"/>
+          <path d="M16 2v4M8 2v4M3 10h18" stroke="#692FC2" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-label">Upcoming</span>
+        <span class="nav-count" id="upcomingCount">10</span>
+      </button>
+
+      <button class="nav-item" data-view="filters">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M4 12h10M4 18h6" stroke="#EB8909" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-label">Filters & Labels</span>
+      </button>
+    </nav>
+
+    <!-- My Projects Section -->
+    <div class="sidebar-section" id="myProjectsSidebarSection">
+      <div class="section-header" data-toggle="myProjects">
+        <div class="section-header-left">
+          <div class="section-badge-avatar">
+            <img src="avatar.jpg" alt="Denise" class="section-avatar-img" onerror="this.style.display='none'">
+          </div>
+          <span class="section-title">My Projects</span>
+        </div>
+        <button class="section-add-btn" id="addMyProjectBtn" title="Add project to My Projects">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="section-items" id="myProjectsItems">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="sidebar-section" id="categoriesSidebarSection">
+      <div class="section-header" data-toggle="categories">
+        <div class="section-header-left">
+          <div class="section-badge-categories">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="4.5" cy="4.5" r="2.5" fill="#246FE0"/>
+              <circle cx="11.5" cy="4.5" r="2.5" fill="#DC4C3E"/>
+              <circle cx="4.5" cy="11.5" r="2.5" fill="#058527"/>
+              <circle cx="11.5" cy="11.5" r="2.5" fill="#FF9A14"/>
+            </svg>
+          </div>
+          <span class="section-title">Categories</span>
+        </div>
+        <button class="section-add-btn" id="addCategoryBtn" title="Add category">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="section-items" id="categoriesItems">
+        <!-- Dynamically rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="sidebar-section" id="teamSidebarSection">
+      <div class="section-header" data-toggle="team">
+        <div class="section-header-left">
+          <div class="section-badge-team">
+            <span class="team-logo-char">d</span>
+          </div>
+          <span class="section-title">Team</span>
+        </div>
+        <button class="section-add-btn" id="addTeamProjectBtn" title="Add project to Team">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="section-items" id="teamItems">
+        <!-- Dynamically rendered by JS -->
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="main" id="mainContent">
+    <div class="main-header">
+      <h1 id="viewTitle">Today</h1>
+      <div class="header-right-actions">
+        <!-- Server Connection Status -->
+        <div class="connection-status-pill online" id="connectionStatus" title="Server status">
+          <span class="status-dot"></span>
+          <span class="status-text">Server Online</span>
+        </div>
+
+        <!-- Device Switcher -->
+        <div class="device-switcher" id="deviceSwitcher">
+          <button class="switcher-btn active" id="btnDesktopView" title="Desktop View">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Desktop</span>
+          </button>
+          <button class="switcher-btn" id="btnMobileView" title="Mobile App View">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <rect x="5" y="2" width="14" height="20" rx="3" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Mobile App</span>
+          </button>
+        </div>
+
+        <button class="view-option-btn" id="viewOptionsBtn" title="View options">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>View</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active View Container (rendered dynamically) -->
+    <div class="content-body" id="contentBody">
+      <!-- Injected by app.js -->
+    </div>
+  </main>
+
+</div>
+
+<!-- ========== MOBILE APPLICATION CONTAINER ========== -->
+<div class="mobile-app-wrapper" id="mobileAppWrapper">
+  <div class="phone-frame" id="phoneFrame">
+    <!-- Dynamic island notch and fake phone status bar removed as requested -->
+
+    <!-- Mobile Header -->
+    <div class="mobile-header" id="mobileHeader">
+      <button class="mobile-icon-btn" id="mobileDrawerBtn" title="Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="mobile-title-container">
+        <div class="mobile-title" id="mobileViewTitle">Today</div>
+      </div>
+      <div class="mobile-header-actions">
+        <button class="mobile-icon-btn" id="mobileSearchBtn" title="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/>
+            <path d="M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="mobile-icon-btn" id="mobileMoreBtn" title="More">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
+            <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+            <circle cx="12" cy="19" r="1.5" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Main Scrollable Body -->
+    <div class="mobile-body" id="mobileBody">
+      <!-- Injected dynamically by app.js -->
+    </div>
+
+    <!-- Mobile Floating Action Button (FAB) -->
+    <button class="mobile-fab" id="mobileFab" title="Add new task">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5v14M5 12h14" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav" id="mobileBottomNav">
+      <button class="bottom-nav-item active" id="mobileTabTasks" data-tab="tasks">
+        <div class="bottom-nav-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="bottom-nav-label">Tasks</span>
+      </button>
+
+      <button class="bottom-nav-item" id="mobileTabCalendar" data-tab="calendar">
+        <div class="bottom-nav-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="bottom-nav-label">Calendar</span>
+      </button>
+
+      <button class="bottom-nav-item" id="mobileTabCategories" data-tab="categories">
+        <div class="bottom-nav-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/>
+            <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <span class="bottom-nav-label">Categories</span>
+      </button>
+
+      <button class="bottom-nav-item" id="mobileTabMore" data-tab="more">
+        <div class="bottom-nav-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
+            <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
+            <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <span class="bottom-nav-label">More</span>
+      </button>
+    </nav>
+
+    <!-- Mobile Slide-out Drawer Navigation -->
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay">
+      <div class="mobile-drawer" id="mobileDrawer">
+        <div class="mobile-drawer-header">
+          <div class="drawer-user">
+            <div class="user-avatar">
+              <img src="avatar.jpg" alt="Denise" class="user-avatar-img">
+            </div>
+            <div class="drawer-user-info">
+              <div class="drawer-user-name" id="drawerUserName">Denise</div>
+              <div class="drawer-user-email" id="drawerUserEmail">denise@example.com</div>
+            </div>
+          </div>
+          <button class="drawer-close-btn" id="mobileDrawerCloseBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="mobile-drawer-nav" id="mobileDrawerNav">
+          <!-- Injected dynamically by app.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Quick-Add Bottom Sheet (Matching Reference 1 Phone) -->
+    <div class="mobile-bottom-sheet-overlay" id="mobileBottomSheetOverlay">
+      <div class="mobile-bottom-sheet" id="mobileBottomSheet">
+        <div class="sheet-drag-handle"></div>
+        <div class="sheet-content">
+          <input class="sheet-input-task" type="text" id="sheetTaskInput" placeholder="Write agenda for Monday's meeting" autocomplete="off">
+          
+          <div class="sheet-chips-row" id="sheetChipsRow">
+            <button class="sheet-chip active" id="sheetChipDate">tomorrow</button>
+            <button class="sheet-chip" id="sheetChipProject">#Website Update</button>
+            <button class="sheet-chip" id="sheetChipSection">Team</button>
+          </div>
+
+          <textarea class="sheet-input-desc" id="sheetDescInput" placeholder="Description" rows="1"></textarea>
+
+          <div class="sheet-quick-actions">
+            <!-- Date Selector Pill -->
+            <button class="sheet-action-pill" id="sheetDatePill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="4" width="18" height="18" rx="2" stroke="#FF9A14" stroke-width="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18" stroke="#FF9A14" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span id="sheetDatePillText" style="color: #EB8909; font-weight: 500;">Tomorrow</span>
+            </button>
+
+            <!-- Time Picker Pill (Add time in my task) -->
+            <div class="sheet-time-wrapper" title="Set task time">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="margin-right:4px;">
+                <circle cx="12" cy="12" r="9" stroke="#246FE0" stroke-width="2"/>
+                <path d="M12 7v5l3 3" stroke="#246FE0" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <input type="time" class="sheet-time-input" id="sheetTimeInput">
+            </div>
+
+            <!-- Priority Pill -->
+            <button class="sheet-action-pill" id="sheetPriorityPill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="#DC4C3E" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span id="sheetPriorityText">Priority</span>
+            </button>
+          </div>
+
+          <div class="sheet-footer">
+            <div class="sheet-selector-wrapper">
+              <select class="sheet-category-select" id="sheetCategorySelect">
+                <!-- Populated dynamically with categories and projects -->
+              </select>
+            </div>
+            <button class="sheet-send-btn" id="sheetSendBtn" title="Add task">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" fill="#FFFFFF"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== AUTH MODAL (SIGN IN / SIGN UP WITH OWN PASSWORD) ========== -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal auth-modal-box">
+    <div class="modal-header">
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tabSignIn">Sign In</button>
+        <button class="auth-tab-btn" id="tabSignUp">Sign Up</button>
+      </div>
+      <button class="modal-close" id="closeAuthModal">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Sign In Form -->
+    <form class="modal-body auth-form" id="signInForm">
+      <div class="form-group">
+        <label class="form-label" for="signInEmail">Email</label>
+        <input class="form-input" type="email" id="signInEmail" placeholder="your@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signInPassword">Password</label>
+        <input class="form-input" type="password" id="signInPassword" placeholder="Enter your password" required autocomplete="current-password">
+      </div>
+      <div class="auth-msg error" id="signInError" style="display:none;"></div>
+      <div class="modal-footer" style="padding: 16px 0 0 0;">
+        <button type="submit" class="btn-submit" id="btnSubmitSignIn" style="width:100%;">Sign In</button>
+      </div>
+    </form>
+
+    <!-- Sign Up Form (Create own password) -->
+    <form class="modal-body auth-form" id="signUpForm" style="display:none;">
+      <div class="form-group">
+        <label class="form-label" for="signUpName">Full Name</label>
+        <input class="form-input" type="text" id="signUpName" placeholder="e.g. Sanjai K" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signUpEmail">Email</label>
+        <input class="form-input" type="email" id="signUpEmail" placeholder="your@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signUpPassword">Create Your Password</label>
+        <input class="form-input" type="password" id="signUpPassword" placeholder="Create your own password" required minlength="4" autocomplete="new-password">
+      </div>
+      <div class="auth-msg error" id="signUpError" style="display:none;"></div>
+      <div class="auth-msg success" id="signUpSuccess" style="display:none;"></div>
+      <div class="modal-footer" style="padding: 16px 0 0 0;">
+        <button type="submit" class="btn-submit" id="btnSubmitSignUp" style="width:100%;">Create Account</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ========== ADD PROJECT MODAL (FOR MY PROJECTS & TEAM) ========== -->
+<div class="modal-overlay" id="addProjectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="addProjectModalTitle">Add Project</span>
+      <button class="modal-close" id="closeAddProjectModal">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="projectNameInput">Project Name</label>
+        <input class="form-input" type="text" id="projectNameInput" placeholder="e.g. Mobile App, Marketing, Client X..." autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="projectSectionSelect">Section</label>
+        <select class="form-select" id="projectSectionSelect">
+          <option value="myProjects">My Projects (Personal)</option>
+          <option value="team">Team Projects</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <div class="color-picker-grid" id="projectColorPickerGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancelProjectBtn">Cancel</button>
+      <button class="btn-submit" id="saveProjectBtn" disabled>Add Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== EDIT TASK MODAL (ADD TIME, SCHEDULE, RENAME) ========== -->
+<div class="modal-overlay" id="editTaskModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Task</span>
+      <button class="modal-close" id="closeEditTaskModal">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="editTaskTextInput">Task Title</label>
+        <input class="form-input" type="text" id="editTaskTextInput" autocomplete="off" required>
+      </div>
+      <div class="form-row" style="display:flex; gap:12px;">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label" for="editTaskTimeInput">Time (Add / Update)</label>
+          <input class="form-input" type="time" id="editTaskTimeInput">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label" for="editTaskDateSelect">Date View</label>
+          <select class="form-select" id="editTaskDateSelect">
+            <option value="today">Today</option>
+            <option value="tomorrow">Tomorrow</option>
+            <option value="upcoming">Upcoming (Next 7 Days)</option>
+            <option value="inbox">Inbox</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row" style="display:flex; gap:12px;">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label" for="editTaskPrioritySelect">Priority</label>
+          <select class="form-select" id="editTaskPrioritySelect">
+            <option value="default">Default</option>
+            <option value="blue">Low (Blue)</option>
+            <option value="orange">Medium (Orange)</option>
+            <option value="red">High (Red)</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label" for="editTaskSectionSelect">Section</label>
+          <select class="form-select" id="editTaskSectionSelect">
+            <option value="myProjects">My Projects</option>
+            <option value="team">Team</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="editTaskCategorySelect">Category</label>
+        <select class="form-select" id="editTaskCategorySelect">
+          <option value="">No category</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="deleteTaskFromModalBtn" style="color: var(--color-red);">Delete Task</button>
+      <div style="flex:1"></div>
+      <button class="btn-cancel" id="cancelEditTaskBtn">Cancel</button>
+      <button class="btn-submit" id="saveEditTaskBtn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SCHEDULE TASK MODAL ========== -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="modal" style="max-width: 360px;">
+    <div class="modal-header">
+      <span class="modal-title">Schedule Task</span>
+      <button class="modal-close" id="closeScheduleModal">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="schedule-quick-options">
+        <button class="schedule-option-btn active" data-schedule-date="today">
+          <span class="schedule-icon">📅</span>
+          <span>Today</span>
+        </button>
+        <button class="schedule-option-btn" data-schedule-date="tomorrow">
+          <span class="schedule-icon">☀️</span>
+          <span>Tomorrow</span>
+        </button>
+        <button class="schedule-option-btn" data-schedule-date="upcoming">
+          <span class="schedule-icon">🗓️</span>
+          <span>Next 7 Days</span>
+        </button>
+      </div>
+      <div class="form-group" style="margin-top:14px;">
+        <label class="form-label" for="scheduleTimeInput">Task Time</label>
+        <input class="form-input" type="time" id="scheduleTimeInput">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancelScheduleBtn">Cancel</button>
+      <button class="btn-submit" id="saveScheduleBtn">Apply Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ADD CATEGORY MODAL ========== -->
+<div class="modal-overlay" id="addCategoryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Category</span>
+      <button class="modal-close" id="closeCategoryModal">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="categoryNameInput">Name</label>
+        <input class="form-input" type="text" id="categoryNameInput" placeholder="e.g. Work, Personal, Health..." autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <div class="color-picker-grid" id="colorPickerGrid">
+          <!-- Dynamically rendered by JS -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancelCategoryBtn">Cancel</button>
+      <button class="btn-submit" id="saveCategoryBtn" disabled>Add category</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== EDIT CATEGORY MODAL ========== -->
+<div class="modal-overlay" id="editCategoryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Category</span>
+      <button class="modal-close" id="closeEditCategoryModal">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="editCategoryNameInput">Name</label>
+        <input class="form-input" type="text" id="editCategoryNameInput" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <div class="color-picker-grid" id="editColorPickerGrid">
+          <!-- Dynamically rendered by JS -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="deleteCategoryBtn" style="color: var(--color-red);">Delete</button>
+      <div style="flex:1"></div>
+      <button class="btn-cancel" id="cancelEditCategoryBtn">Cancel</button>
+      <button class="btn-submit" id="saveEditCategoryBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SEARCH OVERLAY ========== -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <div class="search-input-wrapper">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M16 16l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search tasks..." autocomplete="off">
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-no-results">Type to search your tasks</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CONTEXT MENU ========== -->
+<div class="context-menu" id="contextMenu">
+  <!-- Dynamically rendered by JS -->
+</div>
+
+<!-- ========== TOAST NOTIFICATION CONTAINER ========== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
